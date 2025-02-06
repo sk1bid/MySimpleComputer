@@ -2,12 +2,12 @@
 CC = gcc
 CFLAGS = -Wall -g
 
-# Директории исходных файлов
+# Директории и файлы
 SRC_DIR = .
 CONSOLE_SRC_DIR = console
 INCLUDE_DIR = include
 
-# Имена исполняемых файлов
+# Имя исполняемого файла
 CONSOLE_EXEC = test
 
 # Исходные файлы
@@ -19,16 +19,15 @@ CONSOLE_OBJ = $(CONSOLE_SRC:.c=.o)
 # Цель по умолчанию
 all: $(CONSOLE_EXEC)
 
-# Компиляция исходного кода в объектные файлы
-$(CONSOLE_SRC_DIR)/%.o: $(CONSOLE_SRC_DIR)/%.c
+# Компиляция объектных файлов
+$(CONSOLE_OBJ): $(CONSOLE_SRC)
 	$(CC) $(CFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
-# Сборка объектных файлов в исполняемый файл
+# Сборка исполняемого файла
 $(CONSOLE_EXEC): $(CONSOLE_OBJ)
 	$(CC) $(CFLAGS) $^ -o $@
 
-
-# Правило clean
+# Очистка
 clean:
 	rm -f $(CONSOLE_OBJ) $(CONSOLE_EXEC)
 
