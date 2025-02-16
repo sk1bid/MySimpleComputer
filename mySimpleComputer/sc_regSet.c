@@ -14,11 +14,12 @@ int sc_regSet (int register, int value)
 логического значения целой переменной, принятых в языке Си;
 */
 
-int sc_regSet(int reg, int value) {
+int sc_regSet(int reg, int value)
+{
     // Проверяем допустимость регистра флагов
-    if (reg != FLAG_OVERFLOW && reg != FLAG_DIVISION_BY_ZERO &&
-        reg != FLAG_MEMORY_ERROR && reg != FLAG_IGNORE_CLOCK_TICKS &&
-        reg != FLAG_INVALID_COMMAND) {
+    if (reg != FLAG_OVERFLOW && reg != FLAG_DIVISION_BY_ZERO
+        && reg != FLAG_MEMORY_ERROR && reg != FLAG_IGNORE_CLOCK_TICKS
+        && reg != FLAG_INVALID_COMMAND) {
         return -1; // Ошибка: недопустимый регистр
     }
     if (value != 0 && value != 1) {

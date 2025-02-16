@@ -1,6 +1,6 @@
-#include "stdio.h"
-#include "io.h"
 #include "../include/mySimpleComputer.h"
+#include "io.h"
+#include "stdio.h"
 
 /*
 void printFlags (void) – выводит значения флагов. Формат
@@ -8,7 +8,8 @@ void printFlags (void) – выводит значения флагов. Фор�
 заданной последовательности);
 */
 
-void io_printFlags(void){
+void io_printFlags(void)
+{
     int overflow, divisionByZero, memoryError, ignoreClock, invalidCommand;
 
     // Получаем флаги
@@ -19,11 +20,10 @@ void io_printFlags(void){
     sc_regGet(FLAG_INVALID_COMMAND, &invalidCommand);
 
     printf("Флаги: %c%c%c%c%c\n",
-        overflow ? 'P' : '_', // P - Переполнение
-        divisionByZero ? '0' : '_', // 0 - Деление на 0
-        memoryError ? 'M' : '_', // M - Ошибка памяти
-        ignoreClock ? 'T' : '_', // T - Игнорирование тактов
-        invalidCommand ? 'E' : '_' // E - Неверная команда
-    );    
-
+           overflow ? 'P' : '_',       // P - Переполнение
+           divisionByZero ? '0' : '_', // 0 - Деление на 0
+           memoryError ? 'M' : '_',    // M - Ошибка памяти
+           ignoreClock ? 'T' : '_', // T - Игнорирование тактов
+           invalidCommand ? 'E' : '_' // E - Неверная команда
+    );
 }

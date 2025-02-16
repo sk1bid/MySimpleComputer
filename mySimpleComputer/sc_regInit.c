@@ -9,7 +9,8 @@ int sc_regInit (void) – инициализирует регистр флаго
 значениями по умолчанию;
 */
 
-int sc_regInit(void){
+int sc_regInit(void)
+{
     regFlags = 0;
     return 0;
 }

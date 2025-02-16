@@ -10,13 +10,13 @@ int sc_memorySet (int address, int value) – задает
 корректно и возвращает 0;
 */
 
-int sc_memorySet(int address, int value){
-
-    if (address < 0 || address >= MEMORY_SIZE){
+int sc_memorySet(int address, int value)
+{
+    if (address < 0 || address >= MEMORY_SIZE) {
         return -1; // адрес выходит за допустимые границы
     }
-    
-    if (value > 16383 || value < -16384){
+
+    if (value > 16383 || value < -16384) {
         return -1; /*value не соответсвует допустимому диапазону значений
         15 бит*/
     }

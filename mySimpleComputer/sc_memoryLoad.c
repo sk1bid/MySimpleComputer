@@ -14,14 +14,15 @@ int sc_memoryLoad (char * filename) – загружает из
 В случае успеха функция завершается со статусом 0;
 */
 
-int sc_memoryLoad(char *filename){
-    if (filename == NULL){
+int sc_memoryLoad(char* filename)
+{
+    if (filename == NULL) {
         return -1; // неверный имя файла
     }
 
-    FILE *file = fopen(filename, "rb"); // бинарный файл
+    FILE* file = fopen(filename, "rb"); // бинарный файл
 
-    if (file == NULL){
+    if (file == NULL) {
         return -1; // ошибка при открытии файла
     }
 
@@ -30,10 +31,9 @@ int sc_memoryLoad(char *filename){
 
     fclose(file);
 
-    if (data != MEMORY_SIZE){
+    if (data != MEMORY_SIZE) {
         return -1; // ошибка при загрузке
     }
 
     return 0;
-
 }

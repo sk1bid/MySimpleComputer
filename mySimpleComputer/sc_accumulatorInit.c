@@ -2,7 +2,8 @@
 
 extern int accumulator;
 
-int sc_accumulatorInit(void){
+int sc_accumulatorInit(void)
+{
     accumulator = 0;
     return 0;
 }

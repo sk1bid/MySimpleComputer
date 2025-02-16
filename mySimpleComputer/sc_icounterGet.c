@@ -2,8 +2,9 @@
 #include "stdio.h"
 extern int instructionCounter;
 
-int sc_icounterGet(int *value){
-    if (value == NULL){
+int sc_icounterGet(int* value)
+{
+    if (value == NULL) {
         return -1;
     }
 

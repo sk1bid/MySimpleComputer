@@ -11,8 +11,9 @@ value, то функция завершается со статусом -1. В �
 выполнения функции она завершается со статусом 0.
 */
 
-int sc_memoryGet(int address, int *value){
-    if (address < 0 || address > MEMORY_SIZE){
+int sc_memoryGet(int address, int* value)
+{
+    if (address < 0 || address > MEMORY_SIZE) {
         return -1; // адрес вышел за границы
     }
 

@@ -3,8 +3,9 @@
 
 extern int accumulator;
 
-int sc_accumulatorGet(int *value){
-    if (value == NULL){
+int sc_accumulatorGet(int* value)
+{
+    if (value == NULL) {
         return -1;
     }
 
