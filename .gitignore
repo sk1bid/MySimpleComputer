@@ -1,0 +1,11 @@
+# Исполняемые файлы
+pr01
+console/pr01
+
+# Объектные файлы
+*.o
+console/*.o
+mySimpleComputer/*.o
+
+# Статические библиотеки
+mySimpleComputer/libmySimpleComputer.a
