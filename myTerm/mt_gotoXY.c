@@ -1,7 +1,7 @@
+#include "myTerm.h"
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include "myTerm.h"
 
 int mt_gotoXY(int x, int y)
 {

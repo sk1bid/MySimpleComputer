@@ -1,6 +1,5 @@
 #include "myTerm.h"
 #include <unistd.h>
-#include "myTerm.h"
 
 int mt_delline(void)
 {

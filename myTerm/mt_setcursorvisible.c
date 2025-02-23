@@ -1,6 +1,6 @@
+#include "myTerm.h"
 #include <stdio.h>
 #include <unistd.h>
-#include "myTerm.h"
 
 int mt_setcursorvisible(int value)
 {
