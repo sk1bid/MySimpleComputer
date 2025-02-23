@@ -1,10 +1,10 @@
 #ifndef INCLUDE_MY_SIMPLE_COMPUTER_H
 #define INCLUDE_MY_SIMPLE_COMPUTER_H
 
-#include "../console/io.h"
 #include "../mySimpleComputer/sc_command.h"
 #include "../mySimpleComputer/sc_memory.h"
 #include "../mySimpleComputer/sc_reg.h"
+#include "../myTerm/myTerm.h"
 
 extern int memory[MEMORY_SIZE]; // Оперативная память
 extern int accumulator;         // Аккумулятор

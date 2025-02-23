@@ -1,21 +1,20 @@
 #include "../include/mySimpleComputer.h"
-#include "io.h"
-#include "stdio.h"
-/*
-void printDecodedCommand (int value) – выводит переданное значение в десятичной
-системе счисления, в восьмеричной системе счисления, в шестнадцатиричной системе
-счисления и в двоичной системе счисления.
-*/
+#include "../myTerm/myTerm.h"
+#include <stdio.h>
 
 void io_printDecodedCommand(int value)
 {
-    printf("Десятичная: %d, Восьмеричная: %o, Шестнадцатеричная: %X, "
-           "Двоичная: ",
+    mt_gotoXY(2, 17);
+
+    printf("dec: %0*u | oct: %0*o | hex: %0*X | bin: ",
+           5,
            value,
+           5,
            value,
+           4,
            value);
-    for (int i = 14; i >= 0; i--) { // выводим двоичное по битам
-        printf("%d", (value >> i) & 1);
+    for (int i = 15 - 1; i >= 0; i--) {
+        putchar((value >> i) & 1 ? '1' : '0');
     }
-    printf("\n");
+    fflush(stdout);
 }

@@ -1,14 +1,25 @@
 #include "../include/mySimpleComputer.h"
-#include "io.h"
-#include "stdio.h"
-
-/*
-void printAccumulator (void) – выводит значение аккумулятора;
-*/
+#include "../myTerm/myTerm.h"
+#include <stdio.h>
 
 void io_printAccumulator(void)
 {
-    int value;
+    mt_gotoXY(64, 2);
+
+    int value = 0;
     sc_accumulatorGet(&value);
-    printf("Аккумулятор: %d (0x%X)\n", value, value); // выводим значение
+
+    int sign;
+    int command;
+    int opperand;
+    sc_commandDecode(value, &sign, &command, &opperand);
+
+    printf("sc: ");
+    if (sign == 0) {
+        putchar('+');
+    } else {
+        putchar('-');
+    }
+    printf("%0*X%0*X hex: %0*X", 2, command, 2, opperand, 4, value);
+    fflush(stdout);
 }

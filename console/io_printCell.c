@@ -1,33 +1,28 @@
 #include "../include/mySimpleComputer.h"
-#include "io.h"
-#include "stdio.h"
+#include "../myTerm/myTerm.h"
+#include <stdio.h>
 
-/*
-void printCell (int address) – выводит на экран содержимое ячейки оперативной
-памяти по указанному адресу. Формат вывода должен соответствовать заданию
-(ячейка выводится в декодированном виде);
-*/
-
-void io_printCell(int adress)
+void io_printCell(int address, enum colors fg, enum colors bg)
 {
-    int value;
-    if (sc_memoryGet(adress, &value) == 0) { // получаем значение из памяти
-        int sign, command, operand;
-        if (sc_commandDecode(value, &sign, &command, &operand)
-            == 0) { // декодируем ячейку как команду
-            printf("Адрес %02X(%d): %c%02X : %02X\n",
-                   adress,
-                   adress,
-                   sign ? '-' : '+',
-                   command,
-                   operand);
-        } else {
-            printf("Адрес %02X: Ошибка декодирования\n",
-                   adress); // ошибка декодирования
-        }
+    mt_setfgcolor(fg);
+    mt_setbgcolor(bg);
 
+    int y = (address / 10) + 2;
+    int x = (address % 10) * 6 + 1 + 1;
+    mt_gotoXY(x, y);
+
+    int value;
+    sc_memoryGet(address, &value);
+    int sign = 0;
+    int command = 0;
+    int opperand = 0;
+    if (sign == 0) {
+        putchar('+');
     } else {
-        printf("Ошибка чтения памяти по адресу %02X\n",
-               adress); //ошибка чтения памяти
+        putchar('-');
     }
+    sc_commandDecode(value, &sign, &command, &opperand);
+    printf("%0*X%0*X", 2, command, 2, opperand);
+    fflush(stdout);
+    mt_setdefaultcolor();
 }

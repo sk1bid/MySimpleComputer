@@ -1,14 +1,25 @@
-#include "../include/mySimpleComputer.h" // Общий заголовочный файл библиотеки
-#include "io.h"    // Заголовочный файл модуля io
-#include <stdio.h> // Для стандартного вывода (printf)
-
-/*
-void printCounters (void) – выводит значение счетчика
-команд.*/
+#include "../include/mySimpleComputer.h"
+#include "../myTerm/myTerm.h"
+#include "io.h"
+#include <stdio.h>
 
 void io_printCounters(void)
 {
-    int icounter;
-    sc_icounterGet(&icounter); // Получаем значение счетчика команд
-    printf("Счетчик команд: %d (0x%X)\n", icounter, icounter);
+    mt_gotoXY(63, 5);
+
+    int value;
+    int sign;
+    int command;
+    int opperand;
+    sc_icounterGet(&value);
+    sc_commandDecode(value, &sign, &command, &opperand);
+
+    printf("T: 00     IC: ");
+    if (sign == 0) {
+        putchar('+');
+    } else {
+        putchar('-');
+    }
+    printf("%0*X%0*x", 2, command, 2, opperand);
+    fflush(stdout);
 }

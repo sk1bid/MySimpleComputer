@@ -1,8 +1,6 @@
 #include "sc_reg.h"
 
 static int regFlags;
-static int accumulator;
-static int instructionCounter;
 
 /*
 int sc_regInit (void) – инициализирует регистр флагов
