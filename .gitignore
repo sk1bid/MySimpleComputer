@@ -6,8 +6,10 @@ console/console
 console/*.o
 mySimpleComputer/*.o
 myTerm/*.o
+myReadKey/*.o
 
 # Статические библиотеки
 mySimpleComputer/libmySimpleComputer.a
 myTerm/libmyTerm.a
 myBigChars/libmyBigChars.a
+myReadKey/libmyReadKey.a
