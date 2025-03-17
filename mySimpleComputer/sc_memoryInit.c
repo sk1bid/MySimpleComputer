@@ -1,6 +1,6 @@
 #include "sc_memory.h"
 
-static int memory[MEMORY_SIZE];
+extern int memory[MEMORY_SIZE];
 
 /*
 int sc_memoryInit (void) – инициализирует оперативную

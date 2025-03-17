@@ -30,7 +30,7 @@ void io_printTerm(int address, int input)
         snprintf(INOUT[i], sizeof(INOUT[i]), "%s", INOUT[i + 1]);
     }
     snprintf(INOUT[5 - 1], sizeof(INOUT[5 - 1]), "%s", buffer);
-    int start_X = 67;
+    int start_X = 69;
     int start_Y = 19;
     for (int i = 0; i != 5; i++) {
         printf("%s", INOUT[i]);
