@@ -1,9 +1,9 @@
 #include "../myReadKey/myReadKey.h"
-#include <unistd.h>
 #include <termios.h>
+#include <unistd.h>
 
-
-int rk_mytermregime(int regime, int vtime, int vmin, int echo, int sigint) {
+int rk_mytermregime(int regime, int vtime, int vmin, int echo, int sigint)
+{
     struct termios term;
     if (tcgetattr(STDIN_FILENO, &term) == -1) {
         return -1;

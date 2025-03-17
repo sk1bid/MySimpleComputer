@@ -102,7 +102,7 @@ int rk_readkey(enum keys* key)
         }
     } else if (nbytes == 5) {
         if (buffer[0] == '\033' && buffer[1] == '[' && buffer[2] == '1'
-                    && buffer[4] == '~') {
+            && buffer[4] == '~') {
             switch (buffer[3]) {
             case '5':
                 *key = KEY_F5;

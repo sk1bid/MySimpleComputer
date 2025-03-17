@@ -5,9 +5,9 @@
 #include "../myTerm/myTerm.h"
 #include <fcntl.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
-#include <string.h>
 
 int total_cells = 128;
 int num_cols = 10;
@@ -16,9 +16,8 @@ int current_cell = 0;
 int accumulator = 0;
 int instruction_counter = 0;
 
-    
-
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     if (!isatty(STDOUT_FILENO)) {
         printf("Not a terminal stdout\n");
         return 1;
@@ -33,7 +32,8 @@ int main(int argc, char *argv[]) {
         return 3;
     }
 
-    int font = (argc == 2) ? open(argv[1], O_RDONLY) : open("font.bin", O_RDONLY);
+    int font = (argc == 2) ? open(argv[1], O_RDONLY)
+                           : open("font.bin", O_RDONLY);
     if (font == -1) {
         printf("Error: Can't open font file\n");
         return -1;
@@ -68,15 +68,31 @@ int main(int argc, char *argv[]) {
     io_printCounters();
     io_printFlags();
     io_printBigCell();
-    
+
     mt_gotoXY(1, 30);
     bc_box(1, 1, 61, 15, WHITE, BLACK, "Оперативная память", RED, BLACK);
-    bc_box(1, 16, 61, 3, WHITE, BLACK, "Редактируемая ячейка (формат)", RED, WHITE);
+    bc_box(1,
+           16,
+           61,
+           3,
+           WHITE,
+           BLACK,
+           "Редактируемая ячейка (формат)",
+           RED,
+           WHITE);
     bc_box(63, 1, 23, 3, WHITE, BLACK, "Аккумулятор", RED, BLACK);
     bc_box(87, 1, 23, 3, WHITE, BLACK, "Регистр флагов", RED, BLACK);
     bc_box(63, 4, 23, 3, WHITE, BLACK, "Счетчик команд", RED, BLACK);
     bc_box(87, 4, 23, 3, WHITE, BLACK, "Команда", RED, BLACK);
-    bc_box(63, 7, 47, 12, WHITE, BLACK, "Редактируемая команда (увеличено)", RED, WHITE);
+    bc_box(63,
+           7,
+           47,
+           12,
+           WHITE,
+           BLACK,
+           "Редактируемая команда (увеличено)",
+           RED,
+           WHITE);
     bc_box(68, 19, 10, 7, WHITE, BLACK, "IN-OUT", GREEN, WHITE);
     bc_box(1, 19, 66, 7, WHITE, BLACK, "Кэш процессора", GREEN, WHITE);
     bc_box(79, 19, 31, 7, WHITE, BLACK, "Клавиши", GREEN, WHITE);
@@ -99,51 +115,44 @@ int main(int argc, char *argv[]) {
 
     rk_mytermsave();
     rk_mytermregime(0, 0, 1, 0, 0); // Non-canonical, no echo
-    
+
     enum keys key;
     while (rk_readkey(&key), key != KEY_ESCAPE) {
         rk_mytermregime(0, 0, 1, 0, 0);
         if (key == KEY_OTHER) {
             continue;
-        }
-        else if (key == KEY_UP) {
+        } else if (key == KEY_UP) {
             io_printCell(nowRedact, WHITE, BLACK);
-            if (nowRedact == 9){
+            if (nowRedact == 9) {
                 nowRedact = 118;
 
-            } else if (nowRedact<9){
+            } else if (nowRedact < 9) {
                 nowRedact = (nowRedact - num_cols + total_cells) % total_cells;
-                nowRedact+=1;
+                nowRedact += 1;
 
-            }
-            else{
+            } else {
                 nowRedact = (nowRedact - num_cols + total_cells) % total_cells;
             }
-            
-        }
-        else if (key == KEY_DOWN) {
+
+        } else if (key == KEY_DOWN) {
             io_printCell(nowRedact, WHITE, BLACK);
-            if (nowRedact == 118){
+            if (nowRedact == 118) {
                 nowRedact = 9;
 
-            } else if (nowRedact>=119){
+            } else if (nowRedact >= 119) {
                 nowRedact = (nowRedact + num_cols) % total_cells;
-                nowRedact-=1;
+                nowRedact -= 1;
 
-            }
-            else{
+            } else {
                 nowRedact = (nowRedact + num_cols) % total_cells;
             }
-        }
-        else if (key == KEY_RIGHT) {
+        } else if (key == KEY_RIGHT) {
             io_printCell(nowRedact, WHITE, BLACK);
             nowRedact = (nowRedact + 1) % total_cells;
-        }
-        else if (key == KEY_LEFT) {
+        } else if (key == KEY_LEFT) {
             io_printCell(nowRedact, WHITE, BLACK);
             nowRedact = (nowRedact - 1 + total_cells) % total_cells;
-        }
-        else if (key == KEY_ENTER) {
+        } else if (key == KEY_ENTER) {
             mt_setbgcolor(GREEN);
             mt_setfgcolor(BLACK);
             int y = (nowRedact / 10) + 2;
@@ -153,7 +162,8 @@ int main(int argc, char *argv[]) {
             mt_gotoXY(x, y);
             int value;
             if (!rk_readvalue(&value, 1)) {
-                while (rk_readkey(&key), key != KEY_ENTER && key != KEY_ESCAPE) {
+                while (rk_readkey(&key),
+                       key != KEY_ENTER && key != KEY_ESCAPE) {
                 }
                 if (key == KEY_ENTER) {
                     sc_memorySet(nowRedact, value);
@@ -161,9 +171,8 @@ int main(int argc, char *argv[]) {
                     io_printTerm(nowRedact, 1);
                 }
             }
-            
-        }
-        else if (key == KEY_F5) {
+
+        } else if (key == KEY_F5) {
             mt_setbgcolor(GREEN);
             mt_setfgcolor(BLACK);
             mt_gotoXY(68, 2);
@@ -292,7 +301,6 @@ int main(int argc, char *argv[]) {
             io_printFlags();
         }
 
-        
         // выводим обновленную информацию
         io_printCell(nowRedact, BLACK, WHITE);
         io_printBigCell();

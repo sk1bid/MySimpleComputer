@@ -49,7 +49,8 @@ int rk_readvalue(int* value, int timeout)
             hex_digit_value = key - KEY_A + 10;
         }
 
-        *value = (*value << 4) | hex_digit_value; // Сдвигаем на 4 бита и добавляем новую цифру
+        *value = (*value << 4)
+                | hex_digit_value; // Сдвигаем на 4 бита и добавляем новую цифру
 
         tcsetattr(1, TCSANOW, &Save);
         char c = key;
