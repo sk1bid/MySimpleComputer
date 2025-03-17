@@ -12,4 +12,5 @@ myReadKey/*.o
 mySimpleComputer/libmySimpleComputer.a
 myTerm/libmyTerm.a
 myBigChars/libmyBigChars.a
-myReadKey/libmyReadKey.a
+myReadKey/libmyReadkey.a
+console/font.c
