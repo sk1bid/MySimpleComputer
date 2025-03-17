@@ -13,7 +13,6 @@ int total_cells = 128;
 int num_cols = 10;
 int num_rows = 13;
 int current_cell = 0;
-int accumulator = 0;
 int instruction_counter = 0;
 
 int main(int argc, char* argv[])
