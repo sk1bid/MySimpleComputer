@@ -4,16 +4,18 @@
 #include "../myReadKey/myReadKey.h"
 #include "../myTerm/myTerm.h"
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 int total_cells = 128;
 int num_cols = 10;
 int num_rows = 13;
-int current_cell = 0;
 int instruction_counter = 0;
+int idle_counter = 0;
 
 int main(int argc, char* argv[])
 {
@@ -44,24 +46,22 @@ int main(int argc, char* argv[])
     }
     close(font);
 
-    // Initialize Simple Computer components
     sc_memoryInit();
     sc_regInit();
     sc_accumulatorInit();
     sc_icounterInit();
-    sc_regSet(FLAG_OVERFLOW, 1);
-    sc_regSet(FLAG_DIVISION_BY_ZERO, 1);
+    sc_regSet(FLAG_OVERFLOW, 0);
+    sc_regSet(FLAG_DIVISION_BY_ZERO, 0);
     sc_regSet(FLAG_MEMORY_ERROR, 0);
-    sc_accumulatorSet(9876);
-    sc_icounterSet(64);
+    sc_regSet(FLAG_IGNORE_CLOCK_TICKS, 1);
+    sc_regSet(FLAG_INVALID_COMMAND, 0);
 
-    // Draw initial interface
     mt_clrscr();
 
     for (int i = 0; i < 128; i++) {
         io_printCell(i, WHITE, BLACK);
     }
-    io_printCell(current_cell, BLACK, WHITE);
+    io_printCell(nowRedact, BLACK, WHITE);
     io_printAccumulator();
     io_printCommand();
     io_printCounters();
@@ -112,36 +112,57 @@ int main(int argc, char* argv[])
     printf("F6  - instruction counter\n");
     fflush(stdout);
 
+    setup_interrupts();
+
     rk_mytermsave();
     rk_mytermregime(0, 0, 1, 0, 0); // Non-canonical, no echo
 
     enum keys key;
     while (rk_readkey(&key), key != KEY_ESCAPE) {
         rk_mytermregime(0, 0, 1, 0, 0);
-        if (key == KEY_OTHER) {
+        if (is_reading) {
+            int value;
+            rk_mytermregime(1, 0, 0, 0, 1); // Канонический режим для ввода
+            mt_gotoXY(1, 26); // Выводим приглашение внизу экрана
+            printf("Input value for cell %02X: ", read_address);
+            if (!rk_readvalue(&value, 1)) {
+                sc_accumulatorSet(value); // Для READ записываем в аккумулятор
+                printTerm(
+                        read_address,
+                        2); // Обновляем блок "IN-OUT" с введённым значением
+                is_reading = 0;
+                read_address = -1;
+                sc_regSet(FLAG_IGNORE_CLOCK_TICKS, 0); // Возобновить выполнение
+                mt_gotoXY(1, 26);
+                printf("                              "); // Очистить строку
+            } else {
+                mt_gotoXY(1, 26);
+                printf("Error: Invalid input          ");
+                is_reading = 0;
+                read_address = -1;
+                sc_regSet(FLAG_IGNORE_CLOCK_TICKS, 0);
+            }
+            rk_mytermregime(0, 0, 1, 0, 0); // Вернуть некэнонический режим
+            io_printFlags();
+        } else if (key == KEY_OTHER) {
             continue;
         } else if (key == KEY_UP) {
             io_printCell(nowRedact, WHITE, BLACK);
             if (nowRedact == 9) {
                 nowRedact = 118;
-
             } else if (nowRedact < 9) {
                 nowRedact = (nowRedact - num_cols + total_cells) % total_cells;
                 nowRedact += 1;
-
             } else {
                 nowRedact = (nowRedact - num_cols + total_cells) % total_cells;
             }
-
         } else if (key == KEY_DOWN) {
             io_printCell(nowRedact, WHITE, BLACK);
             if (nowRedact == 118) {
                 nowRedact = 9;
-
             } else if (nowRedact >= 119) {
                 nowRedact = (nowRedact + num_cols) % total_cells;
                 nowRedact -= 1;
-
             } else {
                 nowRedact = (nowRedact + num_cols) % total_cells;
             }
@@ -167,10 +188,10 @@ int main(int argc, char* argv[])
                 if (key == KEY_ENTER) {
                     sc_memorySet(nowRedact, value);
                     mt_setdefaultcolor();
-                    io_printTerm(nowRedact, 1);
+                    printTerm(nowRedact, 0);
+                    io_printFlags();
                 }
             }
-
         } else if (key == KEY_F5) {
             mt_setbgcolor(GREEN);
             mt_setfgcolor(BLACK);
@@ -184,8 +205,7 @@ int main(int argc, char* argv[])
                 }
                 if (key == KEY_ENTER) {
                     sc_accumulatorSet(value);
-
-                } else if (key == KEY_ESCAPE) {
+                    io_printFlags();
                 }
             }
             mt_setdefaultcolor();
@@ -196,9 +216,7 @@ int main(int argc, char* argv[])
             mt_gotoXY(67, 5);
             write(1, "  ", 2);
             mt_gotoXY(67, 5);
-
             int value = 0;
-
             for (int i = 0; i != 2; i++) {
                 while (rk_readkey(&key),
                        !((key >= KEY_ZERO && key <= KEY_NINE)
@@ -210,7 +228,6 @@ int main(int argc, char* argv[])
                 if (key == KEY_ESCAPE) {
                     break;
                 }
-
                 int addCommand = 0;
                 if (key >= KEY_ZERO && key <= KEY_NINE) {
                     addCommand = key - 48;
@@ -228,11 +245,9 @@ int main(int argc, char* argv[])
                 }
                 if (key == KEY_ENTER) {
                     sc_icounterSet(value);
-
-                } else if (key == KEY_ESCAPE) {
+                    io_printFlags();
                 }
             }
-
             io_printCounters();
             io_printCommand();
         } else if (key == KEY_s) {
@@ -257,6 +272,7 @@ int main(int argc, char* argv[])
             }
             fflush(stdout);
             rk_mytermregime(0, 0, 1, 0, 0);
+            io_printFlags();
         } else if (key == KEY_l) {
             rk_mytermregime(1, 0, 0, 0, 1);
             mt_gotoXY(1, 26);
@@ -282,30 +298,32 @@ int main(int argc, char* argv[])
                 for (int i = 0; i != 128; i++) {
                     io_printCell(i, WHITE, BLACK);
                 }
+                io_printFlags();
             }
             fflush(stdout);
             rk_mytermregime(0, 0, 1, 0, 0);
         } else if (key == KEY_i) {
-            sc_memoryInit();
-            sc_accumulatorInit();
-            sc_regInit();
-            sc_icounterInit();
-            sc_regInit();
-            for (int address = 0; address != 128; address++) {
-                io_printCell(address, WHITE, BLACK);
-            }
-            io_printAccumulator();
-            io_printCounters();
-            io_printCommand();
+            raise(SIGUSR1);
+            io_printFlags();
+        } else if (key == KEY_r) {
+            start_timer();
+            sc_regSet(FLAG_IGNORE_CLOCK_TICKS, 0);
+            rk_mytermregime(0, 0, 1, 1, 0);
+            io_printFlags();
+        } else if (key == KEY_t) {
+            stop_timer();
+            sc_regSet(FLAG_IGNORE_CLOCK_TICKS, 0);
+            idle_counter = 0;
+            CU();
             io_printFlags();
         }
 
-        // выводим обновленную информацию
         io_printCell(nowRedact, BLACK, WHITE);
         io_printBigCell();
         int value;
         sc_memoryGet(nowRedact, &value);
         io_printDecodedCommand(value);
+        io_printFlags();
         mt_gotoXY(1, 30);
     }
     mt_setcursorvisible(1);

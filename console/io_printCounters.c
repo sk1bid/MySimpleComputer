@@ -5,7 +5,7 @@
 
 void io_printCounters(void)
 {
-    mt_gotoXY(63, 5);
+    mt_gotoXY(64, 5);
 
     int value;
     int sign;

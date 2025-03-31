@@ -9,6 +9,6 @@ int sc_regInit (void) – инициализирует регистр флаго
 
 int sc_regInit(void)
 {
-    regFlags = 0;
+    regFlags = FLAG_IGNORE_CLOCK_TICKS;
     return 0;
 }

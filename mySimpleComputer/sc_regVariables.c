@@ -3,3 +3,4 @@
 int regFlags;
 int accumulator;
 int instructionCounter;
+int idle_counter;

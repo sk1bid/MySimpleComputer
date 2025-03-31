@@ -34,4 +34,5 @@ void io_printBigCell(void)
     mt_setfgcolor(BLUE);
     printf("Номер редактируемой ячейки: %0*u", 3, nowRedact);
     fflush(stdout);
+    mt_setfgcolor(WHITE);
 }

@@ -4,10 +4,6 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
-// я считаю в моей версии timeout не нужен
-
-/*считаю, что функцию можно было бы реализовать намного проще если бы она не
- * проверяла каждый введенный пользователем символ*/
 
 int rk_readvalue(int* value, int timeout)
 {

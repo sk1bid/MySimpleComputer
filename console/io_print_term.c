@@ -2,9 +2,9 @@
 #include "../myTerm/myTerm.h"
 #include <stdio.h>
 
-char INOUT[5][15] = {"", "", "", "", ""};
+extern char INOUT[5][15] = {"", "", "", "", ""};
 
-void io_printTerm(int address, int input)
+void printTerm(int address, int input)
 {
     int sign;
     int command;
@@ -14,17 +14,25 @@ void io_printTerm(int address, int input)
     sc_commandDecode(value, &sign, &command, &opperand);
 
     char buffer[10];
-    snprintf(
-            buffer,
-            sizeof(buffer),
-            "%0*X> %c%0*d%0*d",
-            2,
-            address,
-            (sign == 0) ? '+' : '-',
-            2,
-            command,
-            2,
-            opperand);
+    if (input == 0) {
+        snprintf(
+                buffer,
+                sizeof(buffer),
+                "%0*X> %c%0*d%0*d",
+                2,
+                address,
+                (sign == 0) ? '+' : '-',
+                2,
+                command,
+                2,
+                opperand);
+    } else if (input == 1) { // Ввод (READ, до ввода)
+        snprintf(buffer, sizeof(buffer), "%02X< ", address);
+    } else if (input == 2) { // После ввода для READ
+        int value;
+        sc_accumulatorGet(&value);
+        snprintf(buffer, sizeof(buffer), "%02X< +%04X", address, value);
+    }
 
     for (int i = 0; i < 5 - 1; i++) {
         snprintf(INOUT[i], sizeof(INOUT[i]), "%s", INOUT[i + 1]);
