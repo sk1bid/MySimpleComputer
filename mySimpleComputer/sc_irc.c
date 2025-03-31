@@ -39,6 +39,7 @@ void IRC(int sig)
         io_printCell(nowRedact, BLACK, WHITE);
     }
 }
+
 void setup_interrupts()
 {
     struct sigaction sa = {0};
