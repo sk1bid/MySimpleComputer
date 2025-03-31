@@ -59,7 +59,8 @@ void stop_timer()
 
 void start_timer()
 {
-    struct itimerval timer = {.it_interval = {.tv_usec = 500000},
-                              .it_value = {.tv_usec = 500000}};
+    struct itimerval timer
+            = {.it_interval = {.tv_usec = 500000},
+               .it_value = {.tv_usec = 500000}};
     setitimer(ITIMER_REAL, &timer, NULL);
 }
