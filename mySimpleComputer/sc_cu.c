@@ -36,11 +36,11 @@ void CU()
     case 0x0A: // READ
         is_reading = 1;
         read_address = op;
-        printTerm(op, 1); // Выводим "адрес< " в блок "IN-OUT"
+        io_printTerm(op, 1); // Выводим "адрес< " в блок "IN-OUT"
         sc_regSet(FLAG_IGNORE_CLOCK_TICKS, 1);
         return;
     case 0x0B: // WRITE
-        printTerm(op, 0); // Выводим "адрес> +значение" в блок "IN-OUT"
+        io_printTerm(op, 0); // Выводим "адрес> +значение" в блок "IN-OUT"
         break;
     case 0x14: // LOAD
         sc_memoryGet(op, &accumulator);

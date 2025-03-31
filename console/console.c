@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
             printf("Input value for cell %02X: ", read_address);
             if (!rk_readvalue(&value, 1)) {
                 sc_accumulatorSet(value); // Для READ записываем в аккумулятор
-                printTerm(
+                io_printTerm(
                         read_address,
                         2); // Обновляем блок "IN-OUT" с введённым значением
                 is_reading = 0;
@@ -188,7 +188,7 @@ int main(int argc, char* argv[])
                 if (key == KEY_ENTER) {
                     sc_memorySet(nowRedact, value);
                     mt_setdefaultcolor();
-                    printTerm(nowRedact, 0);
+                    io_printTerm(nowRedact, 0);
                     io_printFlags();
                 }
             }

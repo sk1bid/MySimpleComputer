@@ -4,7 +4,7 @@
 
 extern char INOUT[5][15] = {"", "", "", "", ""};
 
-void printTerm(int address, int input)
+void io_printTerm(int address, int input)
 {
     int sign;
     int command;
