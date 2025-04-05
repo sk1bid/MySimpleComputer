@@ -5,9 +5,17 @@
 
 int rk_readkey(enum keys* key)
 {
-    char buffer[8];
-    int nbytes;
-    nbytes = read(0, buffer, 7);
+    char buffer[8] = {0};
+    int nbytes = read(0, buffer, 7);
+    if (nbytes <= 0) {
+        *key = KEY_OTHER;
+        return -1;
+    }
+
+    char debug_buffer[100];
+    snprintf(debug_buffer, sizeof(debug_buffer), "Read %d bytes: %d", nbytes, (unsigned char)buffer[0]);
+    print_log(debug_buffer);
+
     *key = KEY_OTHER;
 
     if (nbytes == 1) {

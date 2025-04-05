@@ -14,29 +14,23 @@ Simple Computer и с использованием в качестве знач�
  которые соответствуют формату команды Simple Computer;
 */
 
-int sc_commandEncode(int sign, int command, int operand, int* value)
-{
-    if (value == NULL) {
-        return -1; // неверный указатель
+int sc_commandEncode(int sign, int command, int operand, int *value) {
+    // Проверка допустимости значений
+    if (sign != 0 && sign != 1) { // Знак должен быть 0 или 1
+        return -1;
+    }
+    if (command < 0 || command > 127) { // Код команды — 7 бит (0–127)
+        return -1;
+    }
+    if (operand < 0 || operand > 127) { // Операнд — 7 бит (0–127)
+        return -1;
     }
 
-    if (sign != 0 && sign != 1) {
-        return -1; // неверный знак
-    }
+    // Кодирование команды
+    *value = 0; // Обнуляем результат
+    *value |= (sign & 0x1) << 14; // Устанавливаем бит знака (14-й бит)
+    *value |= (command & 0x7F) << 7;
+    *value |= (operand & 0x7F); // Устанавливаем операнд (0–6 биты)
 
-    if (command < 0 || command > 127) {
-        return -1; // недопустимый код команды
-    }
-
-    if (operand < 0 || operand > 127) {
-        return -1; // недопустимый операнд
-    }
-
-    *value = 0;
-    if (sign) {
-        *value |= SIGN_MASK; // устанавливаем бит знака, если sign==1
-    }
-    *value |= (command << 8); // сдвигаем команду на 8 бит влево
-    *value |= operand; // добавляем операнд
-    return 0;
+    return 0; // Успешное выполнение
 }

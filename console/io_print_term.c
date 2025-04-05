@@ -2,30 +2,17 @@
 #include "../myTerm/myTerm.h"
 #include <stdio.h>
 
-extern char INOUT[5][15] = {"", "", "", "", ""};
+char INOUT[5][15] = {"", "", "", "", ""};
 
-void io_printTerm(int address, int input)
-{
-    int sign;
-    int command;
-    int opperand;
-    int value;
+void io_printTerm(int address, int input) {
+    int sign, command, operand, value;
     sc_memoryGet(address, &value);
-    sc_commandDecode(value, &sign, &command, &opperand);
+    sc_commandDecode(value, &sign, &command, &operand);
 
-    char buffer[10];
-    if (input == 0) {
-        snprintf(
-                buffer,
-                sizeof(buffer),
-                "%0*X> %c%0*d%0*d",
-                2,
-                address,
-                (sign == 0) ? '+' : '-',
-                2,
-                command,
-                2,
-                opperand);
+    char buffer[15];
+    if (input == 0) { // Вывод (WRITE)
+        snprintf(buffer, sizeof(buffer), "%02X> %c%02d%02d", 
+                 address, (sign == 0) ? '+' : '-', command, operand);
     } else if (input == 1) { // Ввод (READ, до ввода)
         snprintf(buffer, sizeof(buffer), "%02X< ", address);
     } else if (input == 2) { // После ввода для READ
@@ -34,17 +21,15 @@ void io_printTerm(int address, int input)
         snprintf(buffer, sizeof(buffer), "%02X< +%04X", address, value);
     }
 
-    for (int i = 0; i < 5 - 1; i++) {
+    for (int i = 0; i < 4; i++) {
         snprintf(INOUT[i], sizeof(INOUT[i]), "%s", INOUT[i + 1]);
     }
-    snprintf(INOUT[5 - 1], sizeof(INOUT[5 - 1]), "%s", buffer);
-    int start_X = 69;
-    int start_Y = 19;
-    for (int i = 0; i != 5; i++) {
+    snprintf(INOUT[4], sizeof(INOUT[4]), "%s", buffer);
+
+    int start_X = 69, start_Y = 19;
+    for (int i = 0; i < 5; i++) {
+        mt_gotoXY(start_X, start_Y + i);
         printf("%s", INOUT[i]);
         fflush(stdout);
-        start_Y++;
-        mt_gotoXY(start_X, start_Y);
     }
-    fflush(stdout);
 }

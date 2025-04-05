@@ -2,8 +2,7 @@
 #include "../myTerm/myTerm.h"
 #include <stdio.h>
 
-void io_printCell(int address, enum colors fg, enum colors bg)
-{
+void io_printCell(int address, enum colors fg, enum colors bg) {
     mt_setfgcolor(fg);
     mt_setbgcolor(bg);
 
@@ -13,16 +12,10 @@ void io_printCell(int address, enum colors fg, enum colors bg)
 
     int value;
     sc_memoryGet(address, &value);
-    int sign = 0;
-    int command = 0;
-    int opperand = 0;
-    if (sign == 0) {
-        putchar('+');
-    } else {
-        putchar('-');
-    }
-    sc_commandDecode(value, &sign, &command, &opperand);
-    printf("%0*X%0*X", 2, command, 2, opperand);
+    int sign, command, operand;
+    sc_commandDecode(value, &sign, &command, &operand);
+    putchar(sign == 0 ? '+' : '-');
+    printf("%02X%02X", command, operand);
     fflush(stdout);
     mt_setdefaultcolor();
 }
