@@ -26,9 +26,9 @@ int bc_box(
     mt_setfgcolor(box_fg);
     // рисуем верхнюю крышку
     mt_gotoXY(x1, y1);
-    putchar('l'); //левый угол
+    putchar('l'); // левый угол
     for (int i = 0; i <= x2 - 2; i++) {
-        putchar('q'); //горизонтальная линия
+        putchar('q'); // горизонтальная линия
     }
     putchar('k'); // правый угол
     fflush(stdout);

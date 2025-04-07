@@ -19,10 +19,10 @@ int sc_memorySave(char* filename)
     }
 
     FILE* file = fopen(filename, "wb"); // открываю файл для
-    //бинарной записи
+    // бинарной записи
 
     if (file == NULL) {
-        return -1; //ошибка открытия
+        return -1; // ошибка открытия
     }
 
     size_t data = fwrite(memory, sizeof(int), MEMORY_SIZE, file);
@@ -31,7 +31,7 @@ int sc_memorySave(char* filename)
     fclose(file);
 
     if (data != MEMORY_SIZE) {
-        return -1; //ошибка при записи
+        return -1; // ошибка при записи
     }
 
     return 0;

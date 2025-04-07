@@ -9,7 +9,8 @@
 #include <sys/time.h>
 
 // Обработчик сигналов (Interrupt Request Controller)
-void IRC(int sig) {
+void IRC(int sig)
+{
     if (sig == SIGALRM) {
         int ignore;
         sc_regGet(FLAG_IGNORE_CLOCK_TICKS, &ignore);
@@ -44,12 +45,17 @@ void IRC(int sig) {
         int ic;
         sc_icounterGet(&ic);
         char buffer[100];
-        snprintf(buffer, sizeof(buffer), "After reset, instructionCounter = %d", ic);
-        print_log(buffer);
+        int start_X = 69, start_Y = 20;
+        for (int i = 0; i < 5; i++) {
+            mt_gotoXY(start_X, start_Y + i);
+            printf("%-9s", INOUT[i]);
+            fflush(stdout);
+        }
     }
 }
 // Настройка обработчиков сигналов
-void setup_interrupts() {
+void setup_interrupts()
+{
     struct sigaction sa = {0};
     sa.sa_handler = IRC;
     sa.sa_flags = SA_RESTART;
@@ -59,19 +65,18 @@ void setup_interrupts() {
 }
 
 // Запуск таймера (генерация SIGALRM каждые 0.5 секунды)
-void start_timer() {
-    struct itimerval timer = {
-        .it_interval = {.tv_usec = 500000},
-        .it_value = {.tv_usec = 500000}
-    };
+void start_timer()
+{
+    struct itimerval timer
+            = {.it_interval = {.tv_usec = 500000},
+               .it_value = {.tv_usec = 500000}};
     setitimer(ITIMER_REAL, &timer, NULL);
 }
 
 // Остановка таймера
-void stop_timer() {
-    struct itimerval timer = {
-        .it_interval = {.tv_usec = 0},
-        .it_value = {.tv_usec = 0}
-    };
+void stop_timer()
+{
+    struct itimerval timer
+            = {.it_interval = {.tv_usec = 0}, .it_value = {.tv_usec = 0}};
     setitimer(ITIMER_REAL, &timer, NULL);
 }

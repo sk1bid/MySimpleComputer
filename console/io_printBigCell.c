@@ -3,8 +3,10 @@
 #include "io.h"
 
 #include <stdio.h>
-void io_printBigCell(void) {
-    if (nowRedact < 0 || nowRedact > 127) return;
+void io_printBigCell(void)
+{
+    if (nowRedact < 0 || nowRedact > 127)
+        return;
 
     int value;
     sc_memoryGet(nowRedact, &value);

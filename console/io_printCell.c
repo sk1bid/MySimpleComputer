@@ -2,7 +2,8 @@
 #include "../myTerm/myTerm.h"
 #include <stdio.h>
 
-void io_printCell(int address, enum colors fg, enum colors bg) {
+void io_printCell(int address, enum colors fg, enum colors bg)
+{
     mt_setfgcolor(fg);
     mt_setbgcolor(bg);
 

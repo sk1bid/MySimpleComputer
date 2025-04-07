@@ -14,7 +14,8 @@ Simple Computer и с использованием в качестве знач�
  которые соответствуют формату команды Simple Computer;
 */
 
-int sc_commandEncode(int sign, int command, int operand, int *value) {
+int sc_commandEncode(int sign, int command, int operand, int* value)
+{
     // Проверка допустимости значений
     if (sign != 0 && sign != 1) { // Знак должен быть 0 или 1
         return -1;
@@ -27,7 +28,7 @@ int sc_commandEncode(int sign, int command, int operand, int *value) {
     }
 
     // Кодирование команды
-    *value = 0; // Обнуляем результат
+    *value = 0;                   // Обнуляем результат
     *value |= (sign & 0x1) << 14; // Устанавливаем бит знака (14-й бит)
     *value |= (command & 0x7F) << 7;
     *value |= (operand & 0x7F); // Устанавливаем операнд (0–6 биты)

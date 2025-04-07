@@ -1,5 +1,5 @@
-
 #include "myReadKey.h"
+#include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -11,10 +11,6 @@ int rk_readkey(enum keys* key)
         *key = KEY_OTHER;
         return -1;
     }
-
-    char debug_buffer[100];
-    snprintf(debug_buffer, sizeof(debug_buffer), "Read %d bytes: %d", nbytes, (unsigned char)buffer[0]);
-    print_log(debug_buffer);
 
     *key = KEY_OTHER;
 

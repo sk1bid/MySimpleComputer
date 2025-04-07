@@ -1,8 +1,8 @@
 #ifndef MY_BIG_CHARS
 #define MY_BIG_CHARS
 
+#include "../include/mySimpleComputer.h"
 #include "../myTerm/myTerm.h"
-#include "mySimpleComputer.h"
 extern int bigchar[18][2];
 /*
 int bc_strlen (char * str) – подсчитывает количество

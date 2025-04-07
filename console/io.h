@@ -1,7 +1,6 @@
 #ifndef IO_H_
 #define IO_H_
 
-
 #include "../myTerm/myTerm.h"
 extern int nowRedact;
 extern char INOUT[5][15];
