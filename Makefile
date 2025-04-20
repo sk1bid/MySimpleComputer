@@ -1,6 +1,7 @@
 # Компилятор и флаги
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -Iinclude -ImyTerm -ImySimpleComputer -ImyBigChars -Iconsole -ImyReadkey
+LDFLAGS = -lm
 
 # Каталоги
 INCLUDE_DIR = include
@@ -9,6 +10,8 @@ MYTERM_LIB_DIR = myTerm
 MYBIGCHARS_LIB_DIR = myBigChars
 CONSOLE_DIR = console
 MYREADKEY_LIB_DIR = myReadKey
+SIMPLEBASIC_DIR = simplebasic
+SIMPLEASSEMBLER_DIR = simpleassembler
 
 # Параметры библиотеки mySimpleComputer
 MYSC_LIB_NAME = mySimpleComputer
@@ -38,8 +41,14 @@ MYREADKEY_OBJ = $(patsubst $(MYREADKEY_LIB_DIR)/%.c, $(MYREADKEY_LIB_DIR)/%.o, $
 CONSOLE_SRC = $(wildcard $(CONSOLE_DIR)/*.c)
 CONSOLE_OBJ = $(patsubst $(CONSOLE_DIR)/%.c, $(CONSOLE_DIR)/%.o, $(CONSOLE_SRC))
 
+# Исходники и объектники для трансляторов
+SIMPLEBASIC_SRC = $(SIMPLEBASIC_DIR)/sbc.c
+SIMPLEBASIC_OBJ = $(SIMPLEBASIC_DIR)/sbc.o
+SIMPLEASSEMBLER_SRC = $(SIMPLEASSEMBLER_DIR)/sat.c
+SIMPLEASSEMBLER_OBJ = $(SIMPLEASSEMBLER_DIR)/sat.o
+
 # Цель по умолчанию
-all: $(MYSC_LIB) $(MYTERM_LIB) $(MYBIGCHARS_LIB) $(MYREADKEY_LIB) $(CONSOLE_DIR)/console
+all: $(MYSC_LIB) $(MYTERM_LIB) $(MYBIGCHARS_LIB) $(MYREADKEY_LIB) $(CONSOLE_DIR)/console sbc sat
 
 # Сборка библиотеки mySimpleComputer
 $(MYSC_LIB): $(MYSC_OBJ)
@@ -75,7 +84,21 @@ $(CONSOLE_DIR)/%.o: $(CONSOLE_DIR)/%.c
 
 # Линковка исполняемого файла консоли
 $(CONSOLE_DIR)/console: $(CONSOLE_OBJ) $(MYSC_LIB) $(MYTERM_LIB) $(MYBIGCHARS_LIB) $(MYREADKEY_LIB)
-	$(CC) -o $@ $(filter-out $(CONSOLE_DIR)/font.o, $(CONSOLE_OBJ)) -L$(MYSC_LIB_DIR) -l$(MYSC_LIB_NAME) -L$(MYTERM_LIB_DIR) -l$(MYTERM_LIB_NAME) -L$(MYBIGCHARS_LIB_DIR) -l$(MYBIGCHARS_LIB_NAME) -L$(MYREADKEY_LIB_DIR) -l$(MYREADKEY_LIB_NAME)
+	$(CC) -o $@ $(filter-out $(CONSOLE_DIR)/font.o, $(CONSOLE_OBJ)) -L$(MYSC_LIB_DIR) -l$(MYSC_LIB_NAME) -L$(MYTERM_LIB_DIR) -l$(MYTERM_LIB_NAME) -L$(MYBIGCHARS_LIB_DIR) -l$(MYBIGCHARS_LIB_NAME) -L$(MYREADKEY_LIB_DIR) -l$(MYREADKEY_LIB_NAME) $(LDFLAGS)
+
+# Сборка транслятора Simple Basic
+sbc: $(SIMPLEBASIC_OBJ)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+$(SIMPLEBASIC_OBJ): $(SIMPLEBASIC_SRC)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+# Сборка транслятора Simple Assembler
+sat: $(SIMPLEASSEMBLER_OBJ)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+$(SIMPLEASSEMBLER_OBJ): $(SIMPLEASSEMBLER_SRC)
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 # Правило очистки
 clean:
@@ -83,8 +106,12 @@ clean:
 		  $(MYSC_LIB) $(MYSC_LIB_DIR)/*.o \
 		  $(MYTERM_LIB) $(MYTERM_LIB_DIR)/*.o \
 		  $(MYBIGCHARS_LIB) $(MYBIGCHARS_LIB_DIR)/*.o \
-		  $(MYREADKEY_LIB) $(MYREADKEY_LIB_DIR)/*.o
+		  $(MYREADKEY_LIB) $(MYREADKEY_LIB_DIR)/*.o \
+		  sbc $(SIMPLEBASIC_DIR)/*.o \
+		  sat $(SIMPLEASSEMBLER_DIR)/*.o
 
 format:
 	find . -type f \( -name "*.c" -o -name "*.h" \) | xargs clang-format -i
 	@echo "Code formatted with clang-format"
+
+.PHONY: all clean format
