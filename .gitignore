@@ -8,7 +8,7 @@ console/*.o
 mySimpleComputer/*.o
 myTerm/*.o
 myReadKey/*.o
-
+.vscode/
 # Статические библиотеки
 mySimpleComputer/libmySimpleComputer.a
 myTerm/libmyTerm.a
