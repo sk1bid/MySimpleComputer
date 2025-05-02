@@ -8,17 +8,28 @@
 #include <string.h>
 #include <sys/time.h>
 
-// Обработчик сигналов (Interrupt Request Controller)
 void IRC(int sig)
 {
     if (sig == SIGALRM) {
         int ignore;
         sc_regGet(FLAG_IGNORE_CLOCK_TICKS, &ignore);
+        // Если процессор не игнорирует такты И idle_counter равен 0 И не идет
+        // чтение, ТО ВЫПОЛНЯЕМ CU Иначе (если ignore=1 ИЛИ idle_counter>0 ИЛИ
+        // is_reading=1), то просто уменьшаем idle_counter (если он > 0) и
+        // выходим
         if (ignore || idle_counter > 0 || is_reading) {
-            if (idle_counter > 0)
-                idle_counter--;
-            return;
+            if (idle_counter > 0) {
+                log_message("Пропуск CU  idle counter = %d\n", idle_counter);
+                io_printCacheLoadProgress(idle_counter);
+                io_printCounters();
+                idle_counter--; // Уменьшаем счетчик простоя
+
+                return; // Пропускаем вызов CU
+            }
         }
+        log_message(" idle counter in irc: %d ", idle_counter);
+        log_message("Заход в CU\n");
+        // Если дошли сюда, значит idle_counter == 0 и можно выполнять команду
         CU();
     } else if (sig == SIGUSR1) {
         sc_memoryInit();
@@ -26,11 +37,13 @@ void IRC(int sig)
         sc_accumulatorInit();
         sc_icounterInit();
         sc_regSet(FLAG_IGNORE_CLOCK_TICKS, 1);
+        stop_timer();
         instructionCounter = 0;
         accumulator = 0;
         idle_counter = 0;
         is_reading = 0;
         read_address = -1;
+        current_cache_line = -1;
         for (int i = 0; i < 5; i++) {
             memset(INOUT[i], 0, sizeof(INOUT[i]));
         }
@@ -38,6 +51,7 @@ void IRC(int sig)
         io_printCounters();
         io_printCommand();
         io_printFlags();
+        io_printCache();
         for (int i = 0; i < 128; i++) {
             io_printCell(i, WHITE, BLACK);
         }
@@ -45,15 +59,27 @@ void IRC(int sig)
         int ic;
         sc_icounterGet(&ic);
         char buffer[100];
-        int start_X = 69, start_Y = 20;
+        int start_X = 69;
+        int start_Y = 20;
         for (int i = 0; i < 5; i++) {
             mt_gotoXY(start_X, start_Y + i);
             printf("%-9s", INOUT[i]);
             fflush(stdout);
         }
+        start_X = 2;
+        start_Y = 20;
+        for (int i = 0; i < CACHE_LINES; i++) {
+            mt_gotoXY(start_X, start_Y + i);
+            for (int j = 0; j <= CACHE_LINE_SIZE; j++) {
+                for (int p = 0; p < 6; p++) {
+                    printf(" ");
+                }
+            }
+            printf("\n");
+        }
+        bc_box(1, 19, 66, 7, WHITE, BLACK, "Кэш процессора", GREEN, WHITE);
     }
 }
-// Настройка обработчиков сигналов
 void setup_interrupts()
 {
     struct sigaction sa = {0};
@@ -64,7 +90,6 @@ void setup_interrupts()
     sigaction(SIGUSR1, &sa, NULL);
 }
 
-// Запуск таймера (генерация SIGALRM каждые 0.5 секунды)
 void start_timer()
 {
     struct itimerval timer
@@ -73,7 +98,6 @@ void start_timer()
     setitimer(ITIMER_REAL, &timer, NULL);
 }
 
-// Остановка таймера
 void stop_timer()
 {
     struct itimerval timer

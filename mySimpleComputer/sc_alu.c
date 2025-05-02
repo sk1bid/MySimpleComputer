@@ -4,8 +4,20 @@
 int ALU(int command, int operand)
 {
     int value, acc = accumulator;
-    if (sc_memoryGet(operand, &value))
-        return -1;
+    int ticks;
+    ticks = sc_memoryGet(operand, &value);
+
+    if (ticks == -1) {
+        sc_regSet(FLAG_IGNORE_CLOCK_TICKS, 1);
+    } else {
+        idle_counter = ticks - 1;
+        int line_addr
+                = (instructionCounter / CACHE_LINE_SIZE) * CACHE_LINE_SIZE;
+        current_cache_line = sc_cacheFindLine(line_addr);
+        if (ticks == 10) {
+            return;
+        }
+    }
 
     switch (command) {
     case 0x1E: // ADD (сложение)
@@ -39,19 +51,9 @@ int ALU(int command, int operand)
     case 0x34: // AND (логическое И)
         acc &= value;
         break;
-    case 0x50: // MUL2 (пользовательская: умножение на 2)
-        acc *= 2;
-        if (acc > 0x7FFF || acc < -0x7FFF) {
-            sc_regSet(FLAG_OVERFLOW, 1);
-            return -1;
-        }
-        break;
-    case 0x51: // DIV2 (пользовательская: деление на 2)
-        acc /= 2;
-        break;
     default:
         return -1;
     }
-    accumulator = acc & 0x7FFF;
+    accumulator = acc;
     return 0;
 }

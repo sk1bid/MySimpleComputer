@@ -5,7 +5,7 @@ extern int accumulator;
 int sc_accumulatorSet(int value)
 {
     if (value > 16383 || value < -16384) {
-        return -1; // недопустимое значение
+        return -1;
     }
 
     accumulator = value;

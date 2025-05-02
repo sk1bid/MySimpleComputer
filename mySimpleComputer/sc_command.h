@@ -3,7 +3,7 @@
 
 #define COMMAND_MASK 0x7F00 // Маска для выделения кода операции (биты 8-14)
 #define OPERAND_MASK 0x007F // Маска для выделения операнда (биты 0-6)
-#define SIGN_MASK 0x8000    // Маска для выделения знака (бит 15)
+#define SIGN_MASK 0x8000 // Маска для выделения знака (бит 15)
 
 /* int sc_commandEncode (int sign, int command, int operand, int * value)
 – кодирует значение ячейки в соответствии с форматом команды

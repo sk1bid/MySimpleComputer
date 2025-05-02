@@ -3,9 +3,9 @@
 
 #define FLAG_OVERFLOW (1 << 0)         // Флаг переполнения
 #define FLAG_DIVISION_BY_ZERO (1 << 1) // Флаг деления на ноль
-#define FLAG_MEMORY_ERROR (1 << 2)     // Флаг ошибки выхода за границы памяти
+#define FLAG_MEMORY_ERROR (1 << 2) // Флаг ошибки выхода за границы памяти
 #define FLAG_IGNORE_CLOCK_TICKS \
-    (1 << 3)                          // Флаг игнорирования тактовых импульсов
+    (1 << 3) // Флаг игнорирования тактовых импульсов
 #define FLAG_INVALID_COMMAND (1 << 4) // Флаг неверной команды
 
 int sc_regInit(void); // инициализирует регистр флагов

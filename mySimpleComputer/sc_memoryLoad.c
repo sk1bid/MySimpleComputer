@@ -1,39 +1,33 @@
+#include "../include/mySimpleComputer.h"
 #include "sc_memory.h"
 #include "stdio.h"
 
 extern int memory[MEMORY_SIZE];
 
-/*
-int sc_memoryLoad (char * filename) – загружает из
-указанного файла содержимое оперативной памяти (используя
-функцию read или fread). Если передан неверный указатель на имя
-файла или произошла какая-либо ошибка чтения данных из файла,
-то функция завершается со статусом -1,
-при этом содержимое «оперативной памяти» никак не изменяется
-(т.е. оно не должно портиться).
-В случае успеха функция завершается со статусом 0;
-*/
-
 int sc_memoryLoad(char* filename)
 {
     if (filename == NULL) {
-        return -1; // неверный имя файла
+        return -1;
     }
 
-    FILE* file = fopen(filename, "rb"); // бинарный файл
-
+    FILE* file = fopen(filename, "rb");
     if (file == NULL) {
-        return -1; // ошибка при открытии файла
+        return -1;
     }
 
-    size_t data = fread(memory, sizeof(int), MEMORY_SIZE, file);
-    // загрузили из файла оперативную память (её содержимое)
-
+    int temp_memory[MEMORY_SIZE];
+    size_t data = fread(temp_memory, sizeof(int), MEMORY_SIZE, file);
     fclose(file);
 
     if (data != MEMORY_SIZE) {
-        return -1; // ошибка при загрузке
+        return -1;
     }
+
+    for (int i = 0; i < MEMORY_SIZE; ++i) {
+        memory[i] = temp_memory[i];
+    }
+
+    sc_cacheInit();
 
     return 0;
 }

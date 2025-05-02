@@ -20,10 +20,10 @@ int sc_regSet(int reg, int value)
     if (reg != FLAG_OVERFLOW && reg != FLAG_DIVISION_BY_ZERO
         && reg != FLAG_MEMORY_ERROR && reg != FLAG_IGNORE_CLOCK_TICKS
         && reg != FLAG_INVALID_COMMAND) {
-        return -1; // Ошибка: недопустимый регистр
+        return -1;
     }
     if (value != 0 && value != 1) {
-        return -1; // Ошибка: недопустимое значение флага
+        return -1;
     }
 
     if (value) {

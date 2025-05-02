@@ -10,7 +10,7 @@ int sc_commandValidate (int command) – проверяет значение п�
 int sc_commandValidate(int command)
 {
     if (command < 0 || command > 128) {
-        return -1; // недопустимый код команды
+        return -1;
     }
     return 0;
 }

@@ -2,11 +2,15 @@
 #define SC_MEMORY_H
 
 #define MEMORY_SIZE 128 // кол-во ячеек оперативной памяти
+#define MEMORY_BLOCK_SIZE 10
+
+#include "sc_cache.h"
+extern int memory[MEMORY_SIZE];
 
 int sc_memoryInit(void); /* инициализирует оперативную
 память Simple Computer, задавая всем её ячейкам нулевые значения*/
 
-int sc_memorySet(int adress, int value); /*Задает
+int sc_memorySet(int address, int value); /*Задает
 значение указанной ячейки памяти как value. Если адрес выходит за
 допустимые границы или value не соответствует допустимому диапазону
 значений, то функция возвращает -1, иначе завершается
@@ -33,4 +37,9 @@ int sc_memoryLoad(char* filename); /*int sc_memoryLoad (char * filename)
 «оперативной памяти» никак не изменяется (т.е. оно не должно портиться).
 В случае успеха функция завершается со статусом 0;*/
 
+int sc_memoryGetDirect(int address, int* value); /*возвращает значение указанной
+ячейки памяти в value, минуя кеш. Если адрес выходит за допустимые границы
+или передан неверный указатель на value,
+то функция завершается со статусом -1. В случае успешного
+выполнения функции она завершается со статусом 0.*/
 #endif
