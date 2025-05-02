@@ -6,25 +6,18 @@ void io_printCommand()
     int value;
     int sign;
     int command;
-    int opperand;
-    sc_icounterGet(&value);
-    sc_commandDecode(value, &sign, &command, &opperand);
-    mt_gotoXY(91, 5);
-    if (opperand > 128) {
+    int operand;
+    int ic;
+    sc_icounterGet(&ic);
+    sc_memoryGetDirect(ic, &value);
+    sc_commandDecode(value, &sign, &command, &operand);
+    mt_gotoXY(95, 5);
+    if (operand > 128) {
         printf("! + FF : FF");
         fflush(stdout);
         return;
     }
-    char buffer[50];
-    snprintf(
-            buffer,
-            sizeof(buffer),
-            "%c %0*X : %0*X",
-            (sign == 0) ? '+' : '-',
-            2,
-            command,
-            2,
-            opperand);
-    printf("%s", buffer);
+    putchar(sign == 0 ? '+' : '-');
+    printf(" %02X : %02X", command, operand);
     fflush(stdout);
 }

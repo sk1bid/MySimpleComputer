@@ -14,12 +14,12 @@ void io_printCounters(void)
     sc_icounterGet(&value);
     sc_commandDecode(value, &sign, &command, &opperand);
 
-    printf("T: 00     IC: ");
+    printf("T: %d     IC: ", idle_counter);
     if (sign == 0) {
         putchar('+');
     } else {
         putchar('-');
     }
-    printf("%0*X%0*x", 2, command, 2, opperand);
+    printf("%0*X", 4, instructionCounter);
     fflush(stdout);
 }

@@ -12,7 +12,7 @@ void io_printCell(int address, enum colors fg, enum colors bg)
     mt_gotoXY(x, y);
 
     int value;
-    sc_memoryGet(address, &value);
+    sc_memoryGetDirect(address, &value);
     int sign, command, operand;
     sc_commandDecode(value, &sign, &command, &operand);
     putchar(sign == 0 ? '+' : '-');

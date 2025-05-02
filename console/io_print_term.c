@@ -7,20 +7,13 @@ char INOUT[5][15] = {"", "", "", "", ""};
 
 void io_printTerm(int address, int input)
 {
-    static int last_address = -1;
-    static int last_input_type = -1;
     char buffer[15];
     int value;
     int sign, command, operand;
 
-    // Проверка на дублирующиеся события
-    if (last_address == address && last_input_type == input) {
-        return;
-    }
-
     // Формирование строки в зависимости от типа операции
     if (input == 0) { // WRITE: вывод значения из памяти
-        if (sc_memoryGet(address, &value)) {
+        if (sc_memoryGet(address, &value) == -1) {
             snprintf(buffer, sizeof(buffer), "%02X> ERR", address);
         } else {
             if (sc_commandDecode(value, &sign, &command, &operand) == 0) {
@@ -57,9 +50,6 @@ void io_printTerm(int address, int input)
     strncpy(INOUT[4], buffer, sizeof(INOUT[4]));
     INOUT[4][sizeof(INOUT[4]) - 1] = '\0';
 
-    // Сохраняем текущее состояние
-    last_address = address;
-    last_input_type = input;
     mt_setfgcolor(WHITE);
     mt_setbgcolor(BLACK);
     // Отрисовка блока IN-OUT

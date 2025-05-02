@@ -14,5 +14,6 @@ void io_printTerm(int address, int input);
 void io_printCommand(void);
 void io_printBigCell(void);
 void print_log(const char* message);
-
+void io_printCache(void);
+void io_printCacheLoadProgress(int remaining_idle_ticks);
 #endif
