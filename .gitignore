@@ -3,6 +3,7 @@ console/console
 
 # Объектные файлы
 *.o
+*.sa
 console/*.o
 mySimpleComputer/*.o
 myTerm/*.o
