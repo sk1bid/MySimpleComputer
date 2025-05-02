@@ -15,7 +15,7 @@ int bc_printbigchar(int big[2], int x, int y, enum colors fg, enum colors bg)
         for (int x1 = 0; x1 != 8; x1++) {
             int value;
             bc_getbigcharpos(big, x1, y1, &value);
-            printf("%c", value ? 'a' : ' '); // закрашиваем
+            printf("%c", value ? 'a' : ' ');
         }
         fflush(stdout);
     }
