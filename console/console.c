@@ -16,11 +16,11 @@
 int total_cells = 128;
 int num_cols = 10;
 int num_rows = 13;
-char logs[10][100]; // Массив для хранения 10 логов
-int log_count = 0;  // Количество логов в массиве
 
 int main(int argc, char* argv[])
 {
+    char terminal[20] = "/dev/pts/8";
+    init_log_terminal(terminal);
     if (!isatty(STDOUT_FILENO)) {
         printf("Not a terminal stdout\n");
         return 1;
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
     io_printFlags();
     io_printBigCell();
     io_printDecodedCommand(0);
-
+    io_printCache();
     mt_gotoXY(1, 30);
     bc_box(1, 1, 61, 15, WHITE, BLACK, "Оперативная память", RED, BLACK);
     bc_box(1,
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
 
     rk_mytermsave();
     rk_mytermregime(0, 0, 1, 0, 0); // Non-canonical, no echo
-
+    mt_setcursorvisible(0);
     enum keys key;
     while (rk_readkey(&key), key != KEY_ESCAPE) {
         char buffer[100];
@@ -167,7 +167,7 @@ int main(int argc, char* argv[])
             mt_gotoXY(x, y);
 
             char input[6] = {0}; // Буфер для ввода (5 символов + '\0')
-            int pos = 0;         // Текущая позиция в буфере
+            int pos = 0; // Текущая позиция в буфере
 
             rk_mytermregime(
                     0, 0, 1, 0, 0); // Устанавливаем неканонический режим
@@ -317,13 +317,6 @@ int main(int argc, char* argv[])
             fflush(stdout);
             rk_mytermregime(0, 0, 1, 0, 0);
         } else if (key == KEY_i) {
-            // Очищаем логи
-            log_count = 0;
-            for (int i = 0; i < 5; i++) {
-                logs[i][0] = '\0';
-                mt_gotoXY(1, 26 + i);
-                mt_delline();
-            }
             raise(SIGUSR1);
             io_printFlags();
             int ic;
@@ -356,8 +349,8 @@ int main(int argc, char* argv[])
         io_printCell(nowRedact, BLACK, WHITE);
         io_printBigCell();
         int value;
-        sc_memoryGet(nowRedact, &value);
-
+        sc_memoryGetDirect(nowRedact, &value);
+        io_printCache();
         io_printDecodedCommand(value);
         io_printFlags();
     }
@@ -368,5 +361,6 @@ int main(int argc, char* argv[])
         mt_gotoXY(1, i);
         mt_delline();
     }
+    close_log_terminal();
     return 0;
 }
