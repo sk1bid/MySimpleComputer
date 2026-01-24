@@ -44,7 +44,7 @@ This will generate:
 
 ## Usage
 
-### 4. Easy Run (New)
+### Easy Run (New)
 You can use the automated script to compile and run your program in one step:
 
 ```bash
