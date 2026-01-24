@@ -248,4 +248,9 @@ void CU()
     io_printCache();
     for (int i = 0; i < 128; i++)
         io_printCell(i, WHITE, BLACK);
+    
+    // Highlight current instruction
+    sc_icounterGet(&ic);
+    nowRedact = ic;
+    io_printCell(nowRedact, BLACK, WHITE);
 }

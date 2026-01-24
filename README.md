@@ -4,6 +4,8 @@
 ![Language](https://img.shields.io/badge/language-C-blue.svg)
 ![Build Status](https://img.shields.io/badge/build-passing-green.svg)
 
+![Demo](assets/demo.gif)
+
 A low-level computer simulator written in C. This project implements a virtual machine with its own memory, CPU registers, and command set, along with a TUI (Text User Interface) console, a simple assembler (`sat`), and a simple basic compiler (`sbc`).
 
 ## Features
@@ -42,29 +44,42 @@ This will generate:
 
 ## Usage
 
-### 1. Compile a Basic Program
+### 4. Easy Run (New)
+You can use the automated script to compile and run your program in one step:
+
+```bash
+./run.sh examples/factorial.sb
+```
+Or for assembly files:
+```bash
+./run.sh examples/factorial.sa
+```
+
+### Manual Usage
+
+#### 1. Compile a Basic Program
 Use the Basic compiler (`sbc`) to convert a `.sb` file to an assembly `.sa` file:
 
 ```bash
 ./sbc examples/factorial.sb factorial.sa
 ```
 
-### 2. Assemble to Machine Code
+#### 2. Assemble to Machine Code
 Use the Assembler (`sat`) to convert the `.sa` file to an object file `.o` (machine code):
 
 ```bash
 ./sat factorial.sa factorial.o
 ```
 
-### 3. Run the Simulator
-Start the console application to run the virtual machine.
+#### 3. Run the Simulator
+Start the console application to run the virtual machine. You can now pass the object file as an argument!
 *Note: This requires a terminal window of sufficient size (at least 80x25).*
 
 ```bash
-./console/console
+./console/console factorial.o
 ```
 
-Once inside the console, you can load the object file (if the load feature is implemented via UI or CLI arguments) or manually input commands.
+Once inside the console, the program is pre-loaded. You can also manually input commands or use the `l` (load) key.
 
 ## Cleaning Up
 To remove build artifacts:

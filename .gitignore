@@ -1,7 +1,5 @@
-# Исполняемые файлы
 console/console
 
-# Объектные файлы
 *.o
 *.a
 sat
@@ -12,14 +10,12 @@ myTerm/*.o
 myReadKey/*.o
 myBigChars/*.o
 
-# Статические библиотеки
 mySimpleComputer/libmySimpleComputer.a
 myTerm/libmyTerm.a
 myBigChars/libmyBigChars.a
 myReadKey/libmyReadkey.a
 console/font.c
 
-# Editors and System
 .vscode/
 .idea/
 *.swp

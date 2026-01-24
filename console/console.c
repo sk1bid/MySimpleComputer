@@ -35,8 +35,7 @@ int main(int argc, char* argv[])
         return 3;
     }
 
-    int font = (argc == 2) ? open(argv[1], O_RDONLY)
-                           : open("console/font.bin", O_RDONLY);
+    int font = open("console/font.bin", O_RDONLY);
     if (font == -1) {
         printf("Error: Can't open font file\n");
         return -1;
@@ -57,6 +56,15 @@ int main(int argc, char* argv[])
     sc_regSet(FLAG_MEMORY_ERROR, 0);
     sc_regSet(FLAG_IGNORE_CLOCK_TICKS, 1);
     sc_regSet(FLAG_INVALID_COMMAND, 0);
+
+    if (argc > 1) {
+        if (sc_memoryLoad(argv[1]) == 0) {
+
+        } else {
+             printf("Failed to load program from %s\n", argv[1]);
+             sleep(2); // Give user time to see error
+        }
+    }
 
     mt_clrscr();
 
