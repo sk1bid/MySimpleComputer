@@ -17,6 +17,7 @@
 #define CMD_AND 0x34
 #define CMD_JUMP 0x28
 #define CMD_JNEG 0x29
+#define CMD_JZ 0x2A
 #define CMD_HALT 0x2B
 #define CMD_NOT 0x33
 #define CMD_JP 0x3A
@@ -51,6 +52,8 @@ int encode_command(const char* mnemonic, int operand)
         opcode = CMD_JUMP;
     else if (strcmp(mnemonic, "JNEG") == 0)
         opcode = CMD_JNEG;
+    else if (strcmp(mnemonic, "JZ") == 0)
+        opcode = CMD_JZ;
     else if (strcmp(mnemonic, "HALT") == 0)
         opcode = CMD_HALT;
     else if (strcmp(mnemonic, "NOT") == 0)
@@ -70,7 +73,7 @@ int encode_command(const char* mnemonic, int operand)
 int main(int argc, char* argv[])
 {
     if (argc != 3) {
-        printf("Usage: sat input.sa output.o\n");
+        fprintf(stderr, "Usage: sat input.sa output.o\n");
         return 1;
     }
 
@@ -78,8 +81,10 @@ int main(int argc, char* argv[])
     FILE* out = fopen(argv[2], "wb");
     if (!in || !out) {
         fprintf(stderr, "Error opening files\n");
-        fclose(in);
-        fclose(out);
+        if (in)
+            fclose(in);
+        if (out)
+            fclose(out);
         return 1;
     }
 
@@ -94,7 +99,7 @@ int main(int argc, char* argv[])
         char addr_str[10], token[10], operand_str[10];
         int addr;
 
-        if (sscanf(line, "%s %s %s", addr_str, token, operand_str) == 3) {
+        if (sscanf(line, "%9s %9s %9s", addr_str, token, operand_str) == 3) {
             addr = atoi(addr_str);
             if (addr < 0 || addr >= MEMORY_SIZE) {
                 fprintf(stderr, "Invalid address: %d\n", addr);

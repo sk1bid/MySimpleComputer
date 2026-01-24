@@ -19,7 +19,7 @@ int num_rows = 13;
 
 int main(int argc, char* argv[])
 {
-    char terminal[20] = "/dev/pts/8";
+    char terminal[20] = "console.log";
     init_log_terminal(terminal);
     if (!isatty(STDOUT_FILENO)) {
         printf("Not a terminal stdout\n");
@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
     }
 
     int font = (argc == 2) ? open(argv[1], O_RDONLY)
-                           : open("font.bin", O_RDONLY);
+                           : open("console/font.bin", O_RDONLY);
     if (font == -1) {
         printf("Error: Can't open font file\n");
         return -1;

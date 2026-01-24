@@ -33,12 +33,9 @@ int sc_memorySet(int address, int value)
         return 1; // Запись в кэш за 1 такт
     } else {
         // Cache Miss
-        log_message("\n-------------CacheLoad miss-------------\n\n");
-        int progress_X = 8;
-        int progress_Y = 21 + current_cache_line;
-        mt_gotoXY(progress_X, progress_Y);
-        printf("Loading: ");
-        fflush(stdout);
+        log_message(
+                "\n-------------CacheLoad miss in %d-------------\n\n",
+                current_cache_line);
         int lru_index = sc_cacheFindLRU();
 
         if (sc_cacheLoadLine(line_addr, lru_index) != 0) {

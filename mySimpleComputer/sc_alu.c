@@ -15,7 +15,7 @@ int ALU(int command, int operand)
                 = (instructionCounter / CACHE_LINE_SIZE) * CACHE_LINE_SIZE;
         current_cache_line = sc_cacheFindLine(line_addr);
         if (ticks == 10) {
-            return;
+            return 0;
         }
     }
 

@@ -32,11 +32,7 @@ int sc_memoryGet(int address, int* value)
     } else {
         // Cache Miss
         log_message("\n-------------CacheGet miss-------------\n\n");
-        int progress_X = 8;
-        int progress_Y = 21 + current_cache_line;
-        log_message("index = %d\n", current_cache_line);
-        mt_gotoXY(progress_X, progress_Y);
-        printf("Loading: ");
+        log_message("index IN MISS = %d\n", current_cache_line);
         fflush(stdout);
         int lru_index = sc_cacheFindLRU();
 

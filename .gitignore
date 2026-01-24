@@ -3,15 +3,24 @@ console/console
 
 # Объектные файлы
 *.o
-*.sa
+*.a
+sat
+sbc
 console/*.o
 mySimpleComputer/*.o
 myTerm/*.o
 myReadKey/*.o
-.vscode/
+myBigChars/*.o
+
 # Статические библиотеки
 mySimpleComputer/libmySimpleComputer.a
 myTerm/libmyTerm.a
 myBigChars/libmyBigChars.a
 myReadKey/libmyReadkey.a
 console/font.c
+
+# Editors and System
+.vscode/
+.idea/
+*.swp
+.DS_Store

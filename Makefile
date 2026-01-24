@@ -1,6 +1,6 @@
 # Компилятор и флаги
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c11 -Iinclude -ImyTerm -ImySimpleComputer -ImyBigChars -Iconsole -ImyReadkey
+CFLAGS = -Wall -Wextra -Iinclude -ImyTerm -ImySimpleComputer -ImyBigChars -Iconsole -ImyReadkey
 LDFLAGS = -lm
 
 # Каталоги

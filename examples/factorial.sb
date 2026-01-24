@@ -1,0 +1,19 @@
+10 REM ФАКТОРИАЛ (новая версия)
+20 INPUT N
+30 LET F = 1
+40 LET I = 1
+
+50 REM Цикл: Пока I <= N
+60 LET D = I - N
+70 IF D > 0 GOTO 130
+
+80 REM F = F * I
+90 LET F = F * I
+
+100 REM I = I + 1
+110 LET I = I + 1
+
+120 GOTO 50
+
+130 OUTPUT F
+140 END

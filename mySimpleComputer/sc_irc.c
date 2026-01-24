@@ -21,6 +21,8 @@ void IRC(int sig)
             if (idle_counter > 0) {
                 log_message("Пропуск CU  idle counter = %d\n", idle_counter);
                 io_printCacheLoadProgress(idle_counter);
+
+                io_printCommand();
                 io_printCounters();
                 idle_counter--; // Уменьшаем счетчик простоя
 

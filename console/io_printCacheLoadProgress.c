@@ -11,10 +11,10 @@ extern int idle_counter;
 
 void io_printCacheLoadProgress(int remaining_idle_ticks)
 {
-    int progress_X = 17;
+    int progress_X = 11;
     int progress_Y = 20 + current_cache_line;
     log_message("index = %d\n", current_cache_line);
-    const int bar_length = 10;
+    const int bar_length = 11;
 
     mt_gotoXY(progress_X, progress_Y);
     mt_setdefaultcolor();
